@@ -1,17 +1,16 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
 import Collapse from '@material-ui/core/Collapse'
+import FormControl from '@material-ui/core/FormControl'
 import Grid from '@material-ui/core/Grid'
 import Hidden from '@material-ui/core/Hidden'
-import Select from '@material-ui/core/Select'
-import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
-import TextField from '@material-ui/core/TextField'
-import { withStyles } from '@material-ui/core/styles'
-import AddIcon from '@material-ui/icons/Add'
 import MenuItem from '@material-ui/core/MenuItem'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import Select from '@material-ui/core/Select'
+import TextField from '@material-ui/core/TextField'
 import countries from 'world-countries'
+import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({
   wrapper: {
@@ -28,11 +27,11 @@ const styles = theme => ({
 })
 
 class AddressInput extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       displayNewAddressForm: false,
-      newAddressManual: this.props.addressResolver ? false : true,
+      newAddressManual: !this.props.addressResolver,
       houseNumber: '',
       addressLine1: '',
       addressLine2: '',
@@ -46,7 +45,7 @@ class AddressInput extends Component {
   reset = () => {
     this.setState({
       displayNewAddressForm: false,
-      newAddressManual: this.props.addressResolver ? false : true,
+      newAddressManual: !this.props.addressResolver,
       houseNumber: '',
       addressLine1: '',
       addressLine2: '',
@@ -85,10 +84,9 @@ class AddressInput extends Component {
       zip: this.state.zip,
       country: this.state.country
     }
-    if(this.props.onAdd(address)) {
-      this.props.onChange(this.props.value.length)
-      this.reset()
-    }
+    this.props.onAdd(address)
+    this.props.onChange(this.props.value.length)
+    this.reset()
   }
 
   handleChangeAddress = event => {
@@ -106,7 +104,7 @@ class AddressInput extends Component {
   }
 
   handleFindAddress = () => {
-    if(this.props.addressResolver) {
+    if (this.props.addressResolver) {
       this.props.addressResolver(this.state.houseNumber, this.state.zip, this.state.country)
       this.reset()
     }
@@ -130,7 +128,7 @@ class AddressInput extends Component {
     return stringAddress
   }
 
-  render() {
+  render () {
     const { classes } = this.props
     return (
       <div className={classes.wrapper}>
@@ -226,8 +224,8 @@ class AddressInput extends Component {
             </Grid>
           </Collapse>
           {
-            this.props.displayCountry ?
-              <FormControl
+            this.props.displayCountry
+              ? <FormControl
                 fullWidth
                 margin={this.props.margin}
               >
@@ -248,14 +246,14 @@ class AddressInput extends Component {
               onClick={this.handleHideNewAddressForm}
             >
               Cancel
-          </Button>
+            </Button>
             <Hidden xsUp={!this.state.newAddressManual}>
               <Button
                 color='primary'
                 onClick={this.handleAddAddress}
               >
                 Add Address
-            </Button>
+              </Button>
             </Hidden>
             <Hidden xsUp={this.state.newAddressManual}>
               <Button
@@ -263,13 +261,13 @@ class AddressInput extends Component {
                 onClick={this.handleEnterAddressManually}
               >
                 Enter Address Manually
-            </Button>
+              </Button>
               <Button
                 color='primary'
                 onClick={this.handleFindAddress}
               >
                 Find Address
-            </Button>
+              </Button>
             </Hidden>
           </div>
         </Collapse>
