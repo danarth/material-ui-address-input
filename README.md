@@ -1,6 +1,12 @@
 # material-ui-address-input
 
+[![Build Status](https://travis-ci.org/DanielArthurUK/material-ui-address-input.svg?branch=master)](https://travis-ci.org/DanielArthurUK/material-ui-address-input)
+[![NpmVersion](https://img.shields.io/npm/v/material-ui-address-input.svg)](https://www.npmjs.com/package/material-ui-address-input)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
 This component is an address picker component for [Material-UI](http://www.material-ui.com). 
+
+![Demo](demo.gif)
 
 ## Installation
 
