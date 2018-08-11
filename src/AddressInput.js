@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
 import Collapse from '@material-ui/core/Collapse'
 import Grid from '@material-ui/core/Grid'
+import Hidden from '@material-ui/core/Hidden'
 import Select from '@material-ui/core/Select'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -10,6 +11,7 @@ import TextField from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add'
 import MenuItem from '@material-ui/core/MenuItem'
+import countries from 'world-countries'
 
 const styles = theme => ({
   wrapper: {
@@ -17,6 +19,11 @@ const styles = theme => ({
   },
   leftIcon: {
     marginRight: theme.spacing.unit
+  },
+  buttonsBar: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
   }
 })
 
@@ -25,6 +32,8 @@ class AddressInput extends Component {
     super(props)
     this.state = {
       displayNewAddressForm: false,
+      newAddressManual: this.props.addressResolver ? false : true,
+      houseNumber: '',
       addressLine1: '',
       addressLine2: '',
       city: '',
@@ -37,6 +46,8 @@ class AddressInput extends Component {
   reset = () => {
     this.setState({
       displayNewAddressForm: false,
+      newAddressManual: this.props.addressResolver ? false : true,
+      houseNumber: '',
       addressLine1: '',
       addressLine2: '',
       city: '',
@@ -53,6 +64,7 @@ class AddressInput extends Component {
   }
 
   handleHideNewAddressForm = () => {
+    this.reset()
     this.setState({
       displayNewAddressForm: false
     })
@@ -73,101 +85,193 @@ class AddressInput extends Component {
       zip: this.state.zip,
       country: this.state.country
     }
-    this.props.onAdd(address)
-    this.reset()
+    if(this.props.onAdd(address)) {
+      this.props.onChange(this.props.value.length)
+      this.reset()
+    }
   }
 
   handleChangeAddress = event => {
-    this.props.onChange(event.value)
+    if (event.target.value === '') {
+      this.handleDisplayNewAddressForm()
+    } else {
+      this.props.onChange(event.target.value)
+    }
+  }
+
+  handleEnterAddressManually = () => {
+    this.setState({
+      newAddressManual: true
+    })
+  }
+
+  handleFindAddress = () => {
+    if(this.props.addressResolver) {
+      this.props.addressResolver(this.state.houseNumber, this.state.zip, this.state.country)
+      this.reset()
+    }
+  }
+
+  stringifyAddress = address => {
+    let stringAddress = address.addressLine1
+    if (address.addressLine2) {
+      stringAddress += `, ${address.addressLine2}`
+    }
+    if (address.city) {
+      stringAddress += `, ${address.city}`
+    }
+    if (address.region) {
+      stringAddress += `, ${address.region}`
+    }
+    stringAddress += `, ${address.zip}`
+    if (address.country) {
+      stringAddress += `, ${address.country}`
+    }
+    return stringAddress
   }
 
   render() {
     const { classes } = this.props
     return (
       <div className={classes.wrapper}>
-        <FormControl
-          disabled={this.props.allAddresses.length === 0}
-          fullWidth
-          margin={this.props.margin}
-          required={this.props.required}
-        >
-          <InputLabel>Address</InputLabel>
-          <Select
-            onChange={this.state.handleChangeAddress}
-            value={this.props.value}
+        <Collapse in={!this.state.displayNewAddressForm}>
+          <FormControl
+            fullWidth
+            disabled={this.props.disabled}
+            margin={this.props.margin}
+            required={this.props.required}
           >
-            {
-              this.props.allAddresses.map((address, key) => (
-                <MenuItem key={key} value={address}>{address.addressLine1}</MenuItem>
-              ))
-            }
-          </Select>
-        </FormControl>
-        <Button color='default' disabled={this.state.displayNewAddressForm} onClick={this.handleDisplayNewAddressForm}>
-          <AddIcon />
-          Add new address
-        </Button>
+            <InputLabel>Address</InputLabel>
+            <Select
+              onChange={this.handleChangeAddress}
+              value={this.props.value}
+            >
+              {
+                this.props.allAddresses.map((address, index) => (
+                  <MenuItem key={index} value={index}>{this.stringifyAddress(address)}</MenuItem>
+                ))
+              }
+              <MenuItem value=''><strong>Add new address...</strong></MenuItem>
+            </Select>
+          </FormControl>
+        </Collapse>
         <Collapse in={this.state.displayNewAddressForm}>
-          <TextField
-            label='Address Line 1'
-            value={this.state.addressLine1}
-            onChange={this.handleChange('addressLine1')}
-            fullWidth={this.props.fullWidth}
-            margin={this.props.margin}
-          />
-          <TextField
-            label='Address Line 2'
-            value={this.state.addressLine2}
-            onChange={this.handleChange('addressLine2')}
-            fullWidth={this.props.fullWidth}
-            margin={this.props.margin}
-          />
-          <TextField
-            label='City'
-            value={this.state.city}
-            onChange={this.handleChange('city')}
-            fullWidth={this.props.fullWidth}
-            margin={this.props.margin}
-          />
-          <Grid container spacing={8}>
-            <Grid item xs={6}>
-              <TextField
-                label='State/Province/Region'
-                value={this.state.region}
-                onChange={this.handleChange('region')}
-                fullWidth={this.props.fullWidth}
-                margin={this.props.margin}
-              />
+          <Collapse in={this.state.newAddressManual}>
+            <TextField
+              label='Address Line 1'
+              required
+              value={this.state.addressLine1}
+              onChange={this.handleChange('addressLine1')}
+              fullWidth
+              margin={this.props.margin}
+            />
+            <TextField
+              label='Address Line 2'
+              value={this.state.addressLine2}
+              onChange={this.handleChange('addressLine2')}
+              fullWidth
+              margin={this.props.margin}
+            />
+            <TextField
+              label='City'
+              value={this.state.city}
+              onChange={this.handleChange('city')}
+              fullWidth
+              margin={this.props.margin}
+            />
+            <Grid container spacing={8}>
+              <Grid item xs={6}>
+                <TextField
+                  label='State/Province/Region'
+                  value={this.state.region}
+                  onChange={this.handleChange('region')}
+                  fullWidth
+                  margin={this.props.margin}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label='ZIP/Postal Code'
+                  required
+                  value={this.state.zip}
+                  onChange={this.handleChange('zip')}
+                  fullWidth
+                  margin={this.props.margin}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label='ZIP/Postal Code'
-                value={this.state.zip}
-                onChange={this.handleChange('zip')}
-                fullWidth={this.props.fullWidth}
-                margin={this.props.margin}
-              />
+          </Collapse>
+          <Collapse in={!this.state.newAddressManual}>
+            <Grid container spacing={8}>
+              <Grid item xs={6}>
+                <TextField
+                  label='House Name/Number'
+                  required
+                  value={this.state.houseNumber}
+                  onChange={this.handleChange('houseNumber')}
+                  fullWidth
+                  margin={this.props.margin}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label='ZIP/Postal Code'
+                  required
+                  value={this.state.zip}
+                  onChange={this.handleChange('zip')}
+                  fullWidth
+                  margin={this.props.margin}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-          <TextField
-            label='Country'
-            value={this.state.country}
-            onChange={this.handleChange('country')}
-            fullWidth={this.props.fullWidth}
-            margin={this.props.margin}
-          />
-          <Button
-            color='default'
-            onClick={this.handleHideNewAddressForm}
-          >
-            Cancel
+          </Collapse>
+          {
+            this.props.displayCountry ?
+              <FormControl
+                fullWidth
+                margin={this.props.margin}
+              >
+                <InputLabel>Country</InputLabel>
+                <Select
+                  value={this.state.country}
+                  onChange={this.handleChange('country')}
+                >
+                  {countries.map((country, index) =>
+                    <MenuItem key={index} value={country.name.common}>{country.name.common}</MenuItem>
+                  )}
+                </Select>
+              </FormControl> : null
+          }
+          <div className={classes.buttonsBar}>
+            <Button
+              color='default'
+              onClick={this.handleHideNewAddressForm}
+            >
+              Cancel
           </Button>
-          <Button
-            color='primary'
-            onClick={this.handleAddAddress}
-          >
-            Add Address
-          </Button>
+            <Hidden xsUp={!this.state.newAddressManual}>
+              <Button
+                color='primary'
+                onClick={this.handleAddAddress}
+              >
+                Add Address
+            </Button>
+            </Hidden>
+            <Hidden xsUp={this.state.newAddressManual}>
+              <Button
+                color='default'
+                onClick={this.handleEnterAddressManually}
+              >
+                Enter Address Manually
+            </Button>
+              <Button
+                color='primary'
+                onClick={this.handleFindAddress}
+              >
+                Find Address
+            </Button>
+            </Hidden>
+          </div>
         </Collapse>
       </div>
     )
@@ -175,17 +279,20 @@ class AddressInput extends Component {
 }
 
 AddressInput.defaultProps = {
-  fullWidth: false,
+  disabled: false,
+  displayCountry: true,
   margin: 'none',
   required: false
 }
 
 AddressInput.propTypes = {
   classes: PropTypes.object.isRequired,
-  fullWidth: PropTypes.bool,
+  displayCountry: PropTypes.bool,
+  disabled: PropTypes.bool,
   margin: PropTypes.oneOf(['none', 'dense', 'normal']),
   onAdd: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
+  addressResolver: PropTypes.func,
   allAddresses: PropTypes.arrayOf(PropTypes.shape({
     addressLine1: PropTypes.string.isRequired,
     addressLine2: PropTypes.string,
@@ -194,17 +301,7 @@ AddressInput.propTypes = {
     zip: PropTypes.string.isRequired,
     country: PropTypes.string
   })).isRequired,
-  value: PropTypes.oneOfType([
-    PropTypes.shape({
-      addressLine1: PropTypes.string.isRequired,
-      addressLine2: PropTypes.string,
-      city: PropTypes.string,
-      region: PropTypes.string,
-      zip: PropTypes.string.isRequired,
-      country: PropTypes.string
-    }),
-    PropTypes.string
-  ]),
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   required: PropTypes.bool
 }
 
