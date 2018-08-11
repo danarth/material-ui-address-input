@@ -1,9 +1,11 @@
+/* global fetch */
+
 import React, { Component } from 'react'
 import AddressInput from '../../src/AddressInput'
-import { Typography, TextField } from '@material-ui/core';
+import { Typography, TextField } from '@material-ui/core'
 
 class UKAddressInput extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       isLoading: false,
@@ -12,7 +14,7 @@ class UKAddressInput extends Component {
       apiKey: ''
     }
   }
-  
+
   handleAddAddress = address => {
     this.setState({
       addresses: [...this.state.addresses, address]
@@ -29,8 +31,8 @@ class UKAddressInput extends Component {
     this.setState({
       isLoading: true
     })
-    let API_KEY = this.state.apiKey.length > 0 ? this.state.apiKey :'ccdWQ4lDlEKHYMvy4XGt2w14878' 
-    fetch(`https://api.getaddress.io/find/${postCode}/${houseNameNumber}?api-key=${apiKey}&format=true`)
+    let API_KEY = this.state.apiKey.length > 0 ? this.state.apiKey : 'ccdWQ4lDlEKHYMvy4XGt2w14878'
+    fetch(`https://api.getaddress.io/find/${postCode}/${houseNameNumber}?api-key=${API_KEY}&format=true`)
       .then(response => response.json())
       .then(data => {
         const respAddress = data.addresses[0]
@@ -59,7 +61,7 @@ class UKAddressInput extends Component {
   render () {
     return (
       <div>
-        <Typography variant='subheading'>This example uses <a href="https://getaddress.io/">getaddress.io</a> API. Unfortunately their free tier API only allows 20 hits a day. If the example does not work, go to their website and sign up for an API key and put it here:</Typography>
+        <Typography variant='subheading'>This example uses <a href='https://getaddress.io/'>getaddress.io</a> API. Unfortunately their free tier API only allows 20 hits a day. If the example does not work, go to their website and sign up for an API key and put it here:</Typography>
         <TextField
           fullWidth
           label='GetAddress.io API Key'
@@ -77,7 +79,6 @@ class UKAddressInput extends Component {
       </div>
     )
   }
-
 }
 
 export default UKAddressInput
