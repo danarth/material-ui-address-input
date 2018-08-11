@@ -2,4 +2,3 @@ language: node_js
 node_js:
   - "8"
 script: npm test
-deploy: npm run deploy-storybook
