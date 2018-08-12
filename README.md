@@ -70,3 +70,6 @@ export default ControlledAddressInput
 | `onChange`* | `func` | | Callback that is fired when the user changes the active address using the dropdown box. There is a single parameter `addressIndex` which represents the index in the array of all addresses that the selected address represents. |
 | `required` | `bool` | `false` | If `true`, the label will indicate that the user must select an address from this component. |
 | `value`*| `union: string | number` | | The index of the selected address in the array of all addresses. If you desire 'no address selected', then `value` should be the empty string `''`. |
+
+## Contributing
+PRs are welcome! :tada:
