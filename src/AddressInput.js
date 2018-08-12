@@ -284,12 +284,6 @@ AddressInput.defaultProps = {
 }
 
 AddressInput.propTypes = {
-  classes: PropTypes.object.isRequired,
-  displayCountry: PropTypes.bool,
-  disabled: PropTypes.bool,
-  margin: PropTypes.oneOf(['none', 'dense', 'normal']),
-  onAdd: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
   addressResolver: PropTypes.func,
   allAddresses: PropTypes.arrayOf(PropTypes.shape({
     addressLine1: PropTypes.string.isRequired,
@@ -299,8 +293,14 @@ AddressInput.propTypes = {
     zip: PropTypes.string.isRequired,
     country: PropTypes.string
   })).isRequired,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  required: PropTypes.bool
+  classes: PropTypes.object.isRequired,
+  disabled: PropTypes.bool,
+  displayCountry: PropTypes.bool,
+  margin: PropTypes.oneOf(['none', 'dense', 'normal']),
+  onAdd: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  required: PropTypes.bool,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 
 export default withStyles(styles, { withTheme: true })(AddressInput)
