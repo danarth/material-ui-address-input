@@ -157,7 +157,6 @@ class AddressInput extends Component {
           <Collapse in={this.state.newAddressManual}>
             <TextField
               label='Address Line 1'
-              required
               value={this.state.addressLine1}
               onChange={this.handleChange('addressLine1')}
               fullWidth
@@ -190,7 +189,6 @@ class AddressInput extends Component {
               <Grid item xs={6}>
                 <TextField
                   label='ZIP/Postal Code'
-                  required
                   value={this.state.zip}
                   onChange={this.handleChange('zip')}
                   fullWidth
@@ -204,7 +202,6 @@ class AddressInput extends Component {
               <Grid item xs={6}>
                 <TextField
                   label='House Name/Number'
-                  required
                   value={this.state.houseNumber}
                   onChange={this.handleChange('houseNumber')}
                   fullWidth
@@ -214,7 +211,6 @@ class AddressInput extends Component {
               <Grid item xs={6}>
                 <TextField
                   label='ZIP/Postal Code'
-                  required
                   value={this.state.zip}
                   onChange={this.handleChange('zip')}
                   fullWidth
