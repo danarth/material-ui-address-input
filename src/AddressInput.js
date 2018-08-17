@@ -11,6 +11,7 @@ import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
 import countries from 'world-countries'
 import { withStyles } from '@material-ui/core/styles'
+import { FormHelperText } from '@material-ui/core';
 
 const styles = theme => ({
   wrapper: {
@@ -38,7 +39,19 @@ class AddressInput extends Component {
       city: '',
       region: '',
       zip: '',
-      country: ''
+      country: '',
+      houseNameNumberError: false,
+      addressLine1Error: false,
+      cityError: false,
+      regionError: false,
+      zipError: false,
+      countryError: false,
+      houseNameNumberHelperText: false,
+      addressLine1HelperText: '',
+      cityHelperText: '',
+      regionHelperText: '',
+      zipHelperText: '',
+      countryHelperText: '',
     }
   }
 
@@ -52,7 +65,19 @@ class AddressInput extends Component {
       city: '',
       region: '',
       zip: '',
-      country: ''
+      country: '',
+      houseNameNumberError: false,
+      addressLine1Error: false,
+      cityError: false,
+      regionError: false,
+      zipError: false,
+      countryError: false,
+      houseNameNumberHelperText: '',
+      addressLine1HelperText: '',
+      cityHelperText: '',
+      regionHelperText: '',
+      zipHelperText: '',
+      countryHelperText: '',
     })
   }
 
@@ -69,6 +94,13 @@ class AddressInput extends Component {
     })
   }
 
+  handleRequiredError = (name, error) => {
+    this.setState({
+      [`${name}Error`]: error,
+      [`${name}HelperText`]: error ? 'This field is required.' : ''
+    })
+  }
+
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value
@@ -76,17 +108,34 @@ class AddressInput extends Component {
   }
 
   handleAddAddress = () => {
-    const address = {
-      addressLine1: this.state.addressLine1,
-      addressLine2: this.state.addressLine2,
-      city: this.state.city,
-      region: this.state.region,
-      zip: this.state.zip,
-      country: this.state.country
+    this.handleRequiredError('addressLine1', this.state.addressLine1 === '')
+    this.handleRequiredError('city', this.state.city === '')
+    this.handleRequiredError('region', this.state.region === '')
+    this.handleRequiredError('zip', this.state.zip === '')
+    if (this.props.displayCountry) {
+      this.handleRequiredError('country', this.state.country === '')
     }
-    this.props.onAdd(address)
-    this.props.onChange(this.props.value.length)
-    this.reset()
+    if (this.state.addressLine1 !== ''
+      && this.state.city !== ''
+      && this.state.region !== ''
+      && this.state.zip !== ''
+      && ((this.props.displayCountry && this.state.country !== '') || !this.props.displayCountry)) {
+      this.setState({
+        addressLine1Error: false,
+        addressLine1HelperText: ''
+      })
+      const address = {
+        addressLine1: this.state.addressLine1,
+        addressLine2: this.state.addressLine2,
+        city: this.state.city,
+        region: this.state.region,
+        zip: this.state.zip,
+        country: this.state.country
+      }
+      this.props.onAdd(address)
+      this.props.onChange(this.props.value.length)
+      this.reset()
+    }
   }
 
   handleChangeAddress = event => {
@@ -169,7 +218,9 @@ class AddressInput extends Component {
         <Collapse in={this.state.displayNewAddressForm}>
           <Collapse in={this.state.newAddressManual}>
             <TextField
-              label={this.props.addressLabels.addressLine1}
+              helperText={this.state.addressLine1HelperText}
+              error={this.state.addressLine1Error}
+              label={`${this.props.addressLabels.addressLine1} *`}
               value={this.state.addressLine1}
               onChange={this.handleChange('addressLine1')}
               fullWidth
@@ -183,7 +234,9 @@ class AddressInput extends Component {
               margin={this.props.margin}
             />
             <TextField
-              label={this.props.addressLabels.city}
+              helperText={this.state.cityHelperText}
+              error={this.state.cityError}
+              label={`${this.props.addressLabels.city} *`}
               value={this.state.city}
               onChange={this.handleChange('city')}
               fullWidth
@@ -192,7 +245,9 @@ class AddressInput extends Component {
             <Grid container spacing={8}>
               <Grid item xs={6}>
                 <TextField
-                  label={this.props.addressLabels.region}
+                  helperText={this.state.regionHelperText}
+                  error={this.state.regionError}
+                  label={`${this.props.addressLabels.region} *`}
                   value={this.state.region}
                   onChange={this.handleChange('region')}
                   fullWidth
@@ -201,7 +256,9 @@ class AddressInput extends Component {
               </Grid>
               <Grid item xs={6}>
                 <TextField
-                  label={this.props.addressLabels.zip}
+                  helperText={this.state.zipHelperText}
+                  error={this.state.zipError}
+                  label={`${this.props.addressLabels.zip} *`}
                   value={this.state.zip}
                   onChange={this.handleChange('zip')}
                   fullWidth
@@ -214,7 +271,9 @@ class AddressInput extends Component {
             <Grid container spacing={8}>
               <Grid item xs={6}>
                 <TextField
-                  label={this.props.addressLabels.houseNameNumber}
+                  helperText={this.state.houseNameNumberHelperText}
+                  error={this.state.houseNameNumberError}
+                  label={`${this.props.addressLabels.houseNameNumber} *`}
                   value={this.state.houseNumber}
                   onChange={this.handleChange('houseNumber')}
                   fullWidth
@@ -223,7 +282,9 @@ class AddressInput extends Component {
               </Grid>
               <Grid item xs={6}>
                 <TextField
-                  label={this.props.addressLabels.zip}
+                  helperText={this.state.zipHelperText}
+                  error={this.state.zipError}
+                  label={`${this.props.addressLabels.zip} *`}
                   value={this.state.zip}
                   onChange={this.handleChange('zip')}
                   fullWidth
@@ -237,17 +298,24 @@ class AddressInput extends Component {
               ? <FormControl
                 fullWidth
                 margin={this.props.margin}
+                error={this.state.countryError}
               >
-                <InputLabel>{this.props.addressLabels.country}</InputLabel>
+                <InputLabel>{`${this.props.addressLabels.country} *`}</InputLabel>
                 <Select
                   native={this.props.native}
                   value={this.state.country}
                   onChange={this.handleChange('country')}
                 >
-                  {countries.map((country, index) =>
+                  {this.props.native ?
+                    <option value=''> </option> : null
+                  }
+                  {countries.sort((a, b) => a.name.common.localeCompare(b.name.common)).map((country, index) =>
+                    this.props.native ?
+                    <option key={index} value={country.name.common}>{country.name.common}</option> :
                     <MenuItem key={index} value={country.name.common}>{country.name.common}</MenuItem>
                   )}
                 </Select>
+                <FormHelperText>{ this.state.countryHelperText }</FormHelperText>
               </FormControl> : null
           }
           <div className={classes.buttonsBar}>
@@ -308,13 +376,13 @@ AddressInput.defaultProps = {
 
 AddressInput.propTypes = {
   addressLabels: PropTypes.shape({
-    houseNameNumber: PropTypes.string,
-    addressLine1: PropTypes.string,
-    addressLine2: PropTypes.string,
-    city: PropTypes.string,
-    region: PropTypes.string,
-    zip: PropTypes.string,
-    country: PropTypes.string
+    houseNameNumber: PropTypes.string.isRequired,
+    addressLine1: PropTypes.string.isRequired,
+    addressLine2: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    region: PropTypes.string.isRequired,
+    zip: PropTypes.string.isRequired,
+    country: PropTypes.string.isRequired
   }),
   addressResolver: PropTypes.func,
   allAddresses: PropTypes.arrayOf(PropTypes.shape({
