@@ -1,6 +1,6 @@
 {
   "name": "material-ui-address-input",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A customisable address input component for Material-UI.",
   "main": "lib/AddressInput.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "build-storybook": "build-storybook",
     "build:watch": "nodemon --watch src/ --exec npm run build",
     "deploy-storybook": "build-storybook -o storybook && gh-pages -d storybook && rm -r storybook",
-    "prepublish": "babel src -d lib",
+    "prepare": "babel src -d lib",
     "storybook": "start-storybook -p 6006",
     "test": "standard"
   },
