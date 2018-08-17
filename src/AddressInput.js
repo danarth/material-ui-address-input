@@ -11,7 +11,7 @@ import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
 import countries from 'world-countries'
 import { withStyles } from '@material-ui/core/styles'
-import { FormHelperText } from '@material-ui/core';
+import { FormHelperText } from '@material-ui/core'
 
 const styles = theme => ({
   wrapper: {
@@ -28,7 +28,7 @@ const styles = theme => ({
 })
 
 class AddressInput extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       displayNewAddressForm: false,
@@ -51,7 +51,7 @@ class AddressInput extends Component {
       cityHelperText: '',
       regionHelperText: '',
       zipHelperText: '',
-      countryHelperText: '',
+      countryHelperText: ''
     }
   }
 
@@ -77,7 +77,7 @@ class AddressInput extends Component {
       cityHelperText: '',
       regionHelperText: '',
       zipHelperText: '',
-      countryHelperText: '',
+      countryHelperText: ''
     })
   }
 
@@ -115,11 +115,11 @@ class AddressInput extends Component {
     if (this.props.displayCountry) {
       this.handleRequiredError('country', this.state.country === '')
     }
-    if (this.state.addressLine1 !== ''
-      && this.state.city !== ''
-      && this.state.region !== ''
-      && this.state.zip !== ''
-      && ((this.props.displayCountry && this.state.country !== '') || !this.props.displayCountry)) {
+    if (this.state.addressLine1 !== '' &&
+      this.state.city !== '' &&
+      this.state.region !== '' &&
+      this.state.zip !== '' &&
+      ((this.props.displayCountry && this.state.country !== '') || !this.props.displayCountry)) {
       this.setState({
         addressLine1Error: false,
         addressLine1HelperText: ''
@@ -177,7 +177,7 @@ class AddressInput extends Component {
     return stringAddress
   }
 
-  render() {
+  render () {
     const { classes } = this.props
     return (
       <div className={classes.wrapper}>
@@ -198,19 +198,19 @@ class AddressInput extends Component {
               onChange={this.handleChangeAddress}
               value={this.props.value}
             >
-              {this.props.allAddresses.length === 0 && this.props.native ?
-                  <option value=''> </option> : null
+              {this.props.allAddresses.length === 0 && this.props.native
+                ? <option value='' /> : null
               }
               {
                 this.props.allAddresses.map((address, index) => (
-                  this.props.native ?
-                    <option key={index} value={index}>{this.stringifyAddress(address)}</option> :
-                    <MenuItem key={index} value={index}>{this.stringifyAddress(address)}</MenuItem>
+                  this.props.native
+                    ? <option key={index} value={index}>{this.stringifyAddress(address)}</option>
+                    : <MenuItem key={index} value={index}>{this.stringifyAddress(address)}</MenuItem>
                 ))
               }
-              {this.props.native ?
-                <option value={-1}>Add new address...</option> :
-                <MenuItem value={-1}><strong>Add new address...</strong></MenuItem>
+              {this.props.native
+                ? <option value={-1}>Add new address...</option>
+                : <MenuItem value={-1}><strong>Add new address...</strong></MenuItem>
               }
             </Select>
           </FormControl>
@@ -306,13 +306,13 @@ class AddressInput extends Component {
                   value={this.state.country}
                   onChange={this.handleChange('country')}
                 >
-                  {this.props.native ?
-                    <option value=''> </option> : null
+                  {this.props.native
+                    ? <option value='' /> : null
                   }
                   {countries.sort((a, b) => a.name.common.localeCompare(b.name.common)).map((country, index) =>
-                    this.props.native ?
-                    <option key={index} value={country.name.common}>{country.name.common}</option> :
-                    <MenuItem key={index} value={country.name.common}>{country.name.common}</MenuItem>
+                    this.props.native
+                      ? <option key={index} value={country.name.common}>{country.name.common}</option>
+                      : <MenuItem key={index} value={country.name.common}>{country.name.common}</MenuItem>
                   )}
                 </Select>
                 <FormHelperText>{ this.state.countryHelperText }</FormHelperText>
