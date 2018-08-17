@@ -27,7 +27,7 @@ const styles = theme => ({
 })
 
 class AddressInput extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       displayNewAddressForm: false,
@@ -90,7 +90,7 @@ class AddressInput extends Component {
   }
 
   handleChangeAddress = event => {
-    if (event.target.value === '') {
+    if (parseInt(event.target.value) === -1) {
       this.handleDisplayNewAddressForm()
     } else {
       this.props.onChange(event.target.value)
@@ -128,7 +128,7 @@ class AddressInput extends Component {
     return stringAddress
   }
 
-  render () {
+  render() {
     const { classes } = this.props
     return (
       <div className={classes.wrapper}>
@@ -139,38 +139,51 @@ class AddressInput extends Component {
             margin={this.props.margin}
             required={this.props.required}
           >
-            <InputLabel>Address</InputLabel>
+            <InputLabel htmlFor={this.props.id}>{this.props.label}</InputLabel>
             <Select
+              inputProps={{
+                id: this.props.id,
+                name: this.props.name
+              }}
+              native={this.props.native}
               onChange={this.handleChangeAddress}
               value={this.props.value}
             >
+              {this.props.allAddresses.length === 0 && this.props.native ?
+                  <option value=''> </option> : null
+              }
               {
                 this.props.allAddresses.map((address, index) => (
-                  <MenuItem key={index} value={index}>{this.stringifyAddress(address)}</MenuItem>
+                  this.props.native ?
+                    <option key={index} value={index}>{this.stringifyAddress(address)}</option> :
+                    <MenuItem key={index} value={index}>{this.stringifyAddress(address)}</MenuItem>
                 ))
               }
-              <MenuItem value=''><strong>Add new address...</strong></MenuItem>
+              {this.props.native ?
+                <option value={-1}>Add new address...</option> :
+                <MenuItem value={-1}><strong>Add new address...</strong></MenuItem>
+              }
             </Select>
           </FormControl>
         </Collapse>
         <Collapse in={this.state.displayNewAddressForm}>
           <Collapse in={this.state.newAddressManual}>
             <TextField
-              label='Address Line 1'
+              label={this.props.addressLabels.addressLine1}
               value={this.state.addressLine1}
               onChange={this.handleChange('addressLine1')}
               fullWidth
               margin={this.props.margin}
             />
             <TextField
-              label='Address Line 2'
+              label={this.props.addressLabels.addressLine2}
               value={this.state.addressLine2}
               onChange={this.handleChange('addressLine2')}
               fullWidth
               margin={this.props.margin}
             />
             <TextField
-              label='City'
+              label={this.props.addressLabels.city}
               value={this.state.city}
               onChange={this.handleChange('city')}
               fullWidth
@@ -179,7 +192,7 @@ class AddressInput extends Component {
             <Grid container spacing={8}>
               <Grid item xs={6}>
                 <TextField
-                  label='State/Province/Region'
+                  label={this.props.addressLabels.region}
                   value={this.state.region}
                   onChange={this.handleChange('region')}
                   fullWidth
@@ -188,7 +201,7 @@ class AddressInput extends Component {
               </Grid>
               <Grid item xs={6}>
                 <TextField
-                  label='ZIP/Postal Code'
+                  label={this.props.addressLabels.zip}
                   value={this.state.zip}
                   onChange={this.handleChange('zip')}
                   fullWidth
@@ -201,7 +214,7 @@ class AddressInput extends Component {
             <Grid container spacing={8}>
               <Grid item xs={6}>
                 <TextField
-                  label='House Name/Number'
+                  label={this.props.addressLabels.houseNameNumber}
                   value={this.state.houseNumber}
                   onChange={this.handleChange('houseNumber')}
                   fullWidth
@@ -210,7 +223,7 @@ class AddressInput extends Component {
               </Grid>
               <Grid item xs={6}>
                 <TextField
-                  label='ZIP/Postal Code'
+                  label={this.props.addressLabels.zip}
                   value={this.state.zip}
                   onChange={this.handleChange('zip')}
                   fullWidth
@@ -225,8 +238,9 @@ class AddressInput extends Component {
                 fullWidth
                 margin={this.props.margin}
               >
-                <InputLabel>Country</InputLabel>
+                <InputLabel>{this.props.addressLabels.country}</InputLabel>
                 <Select
+                  native={this.props.native}
                   value={this.state.country}
                   onChange={this.handleChange('country')}
                 >
@@ -273,13 +287,35 @@ class AddressInput extends Component {
 }
 
 AddressInput.defaultProps = {
+  addressLabels: {
+    houseNameNumber: 'House Name/Number',
+    addressLine1: 'Address Line 1',
+    addressLine2: 'Address Line 2',
+    city: 'City',
+    region: 'State/Province/Region',
+    zip: 'ZIP/Postal Code',
+    country: 'Country'
+  },
   disabled: false,
   displayCountry: true,
+  id: 'address',
+  label: 'Address',
   margin: 'none',
+  name: 'address',
+  native: false,
   required: false
 }
 
 AddressInput.propTypes = {
+  addressLabels: PropTypes.shape({
+    houseNameNumber: PropTypes.string,
+    addressLine1: PropTypes.string,
+    addressLine2: PropTypes.string,
+    city: PropTypes.string,
+    region: PropTypes.string,
+    zip: PropTypes.string,
+    country: PropTypes.string
+  }),
   addressResolver: PropTypes.func,
   allAddresses: PropTypes.arrayOf(PropTypes.shape({
     addressLine1: PropTypes.string.isRequired,
@@ -292,7 +328,11 @@ AddressInput.propTypes = {
   classes: PropTypes.object.isRequired,
   disabled: PropTypes.bool,
   displayCountry: PropTypes.bool,
+  id: PropTypes.string,
+  label: PropTypes.string,
   margin: PropTypes.oneOf(['none', 'dense', 'normal']),
+  name: PropTypes.string,
+  native: PropTypes.bool,
   onAdd: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   required: PropTypes.bool,
