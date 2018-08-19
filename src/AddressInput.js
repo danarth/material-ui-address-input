@@ -204,8 +204,8 @@ class AddressInput extends Component {
               {
                 this.props.allAddresses.map((address, index) => (
                   this.props.native
-                    ? <option key={index} value={index}>{this.stringifyAddress(address)}</option>
-                    : <MenuItem key={index} value={index}>{this.stringifyAddress(address)}</MenuItem>
+                    ? <option key={index} value={address.id || index}>{this.stringifyAddress(address)}</option>
+                    : <MenuItem key={index} value={address.id || index}>{this.stringifyAddress(address)}</MenuItem>
                 ))
               }
               {this.props.native
