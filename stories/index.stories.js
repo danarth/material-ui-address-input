@@ -10,6 +10,12 @@ storiesOf('AddressInput')
   .add('controlled', () => (
     <ControlledAddressInput />
   ))
+  .add('controlled error style', () => (
+    <ControlledAddressInput
+      error
+      helperText='Some error message'
+    />
+  ))
   .add('controlled (without country)', () => (
     <ControlledAddressInput
       displayCountry={false}

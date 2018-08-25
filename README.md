@@ -66,6 +66,8 @@ export default ControlledAddressInput
 | `allAddresses`* | `array` | | Array containing all of the `address` objects that the user can choose from. Addresses should be of the form {addressLine1: string, addressLine2: string, city: string, region: string, zip: string, country: string} |
 | `disabled` | `bool` | `false` | If `true`, the label, input and helper text should be displayed in a disabled state. |
 | `displayCountry` | `bool` | `true` | Whether the address selector should allow users to choose their country. Often disabled if your application typically has users from a single country. |
+| `error` | `bool` | | If `true` the address dropdown will be in an error state and appear red. |
+| `helperText` | `string` | | Helper text to display below the address selector. |
 | `id` | `string` | `'address'` | The `id` to be passed to the select element. |
 | `label` | `string` | `'Address'` | The label to be shown on the address picker component. |
 | `margin` | `enum: 'none' | 'dense' | 'normal'` | `'none'` | If `dense` or `normal`, will adjust vertical spacing of this component. |

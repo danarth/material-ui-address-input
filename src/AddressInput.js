@@ -183,15 +183,14 @@ class AddressInput extends Component {
       <div className={classes.wrapper}>
         <Collapse in={!this.state.displayNewAddressForm}>
           <FormControl
-            fullWidth
             disabled={this.props.disabled}
+            error={this.props.error}
+            fullWidth
             margin={this.props.margin}
             required={this.props.required}
           >
             <InputLabel htmlFor={this.props.id}>{this.props.label}</InputLabel>
             <Select
-              error={this.props.error}
-              helperText={this.props.helperText}
               inputProps={{
                 id: this.props.id,
                 name: this.props.name
@@ -215,6 +214,8 @@ class AddressInput extends Component {
                 : <MenuItem value={-1}><strong>Add new address...</strong></MenuItem>
               }
             </Select>
+            { this.props.helperText
+              ? <FormHelperText>{ this.props.helperText }</FormHelperText> : null }
           </FormControl>
         </Collapse>
         <Collapse in={this.state.displayNewAddressForm}>
