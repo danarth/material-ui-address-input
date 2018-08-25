@@ -190,6 +190,8 @@ class AddressInput extends Component {
           >
             <InputLabel htmlFor={this.props.id}>{this.props.label}</InputLabel>
             <Select
+              error={this.props.error}
+              helperText={this.props.helperText}
               inputProps={{
                 id: this.props.id,
                 name: this.props.name
@@ -396,6 +398,8 @@ AddressInput.propTypes = {
   classes: PropTypes.object.isRequired,
   disabled: PropTypes.bool,
   displayCountry: PropTypes.bool,
+  error: PropTypes.bool,
+  helperText: PropTypes.string,
   id: PropTypes.string,
   label: PropTypes.string,
   margin: PropTypes.oneOf(['none', 'dense', 'normal']),
