@@ -400,7 +400,7 @@ AddressInput.propTypes = {
   disabled: PropTypes.bool,
   displayCountry: PropTypes.bool,
   error: PropTypes.bool,
-  helperText: PropTypes.string,
+  helperText: PropTypes.node,
   id: PropTypes.string,
   label: PropTypes.string,
   margin: PropTypes.oneOf(['none', 'dense', 'normal']),
