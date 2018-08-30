@@ -1,6 +1,6 @@
 {
   "name": "material-ui-address-input",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A customisable address input component for Material-UI.",
   "main": "lib/AddressInput.js",
   "scripts": {
