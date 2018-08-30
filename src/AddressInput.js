@@ -199,8 +199,9 @@ class AddressInput extends Component {
               onChange={this.handleChangeAddress}
               value={this.props.value}
             >
-              {this.props.allAddresses.length === 0 && this.props.native
-                ? <option value='' /> : null
+              {this.props.native
+                ? <option value='' />
+                : <MenuItem value=''>Choose an address...</MenuItem>
               }
               {
                 this.props.allAddresses.map((address, index) => (
