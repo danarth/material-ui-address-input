@@ -196,6 +196,7 @@ class AddressInput extends Component {
                 name: this.props.name
               }}
               native={this.props.native}
+              onBlur={this.props.onBlur}
               onChange={this.handleChangeAddress}
               value={this.props.value}
             >
